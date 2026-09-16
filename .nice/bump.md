@@ -1,0 +1,1 @@
+[2026-09-15 20:10] minor: Initial extraction — token-styled sidebar tree (tagSidebarPaths engine + glyph restyle + manager-sidebar CSS) and the preview-side StoryNavigation bar, moved out of nice-storybook into a standalone addon.

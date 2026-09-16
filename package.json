@@ -1,0 +1,80 @@
+{
+  "name": "nice-storybook-navigation",
+  "version": "0.1.0",
+  "description": "Storybook addon: a token-styled sidebar tree and a preview-side navigation bar (back/next, sidebar toggle, open-in-editor, settings) for the Nice design system.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./manager": {
+      "types": "./dist/manager.d.ts",
+      "import": "./dist/manager.js"
+    },
+    "./preview": {
+      "types": "./dist/preview.d.ts",
+      "import": "./dist/preview.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "storybook",
+    "storybook-addons",
+    "sidebar",
+    "navigation",
+    "nice",
+    "design-system"
+  ],
+  "author": "Nice Prototypes",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/niceprototypes/nice-storybook-navigation"
+  },
+  "bugs": {
+    "url": "https://github.com/niceprototypes/nice-storybook-navigation/issues"
+  },
+  "homepage": "https://github.com/niceprototypes/nice-storybook-navigation#readme",
+  "peerDependencies": {
+    "@storybook/addon-links": ">=10.0.0",
+    "react": ">=19.2.0 <20.0.0",
+    "react-dom": ">=19.2.0 <20.0.0",
+    "storybook": ">=10.0.0",
+    "storybook-dark-mode": ">=5.0.0",
+    "styled-components": ">=6.1.18 <7.0.0"
+  },
+  "dependencies": {
+    "nice-icons": "file:../icons",
+    "nice-react-button": "file:../react-button",
+    "nice-react-flex": "file:../react-flex",
+    "nice-react-icon": "file:../react-icon",
+    "nice-react-ink": "file:../react-ink",
+    "nice-react-styles": "file:../react-styles",
+    "nice-styles": "file:../styles"
+  },
+  "devDependencies": {
+    "@storybook/addon-links": "^10.2.19",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "storybook": "^10.2.19",
+    "storybook-dark-mode": "^5.0.0",
+    "styled-components": "6.1.19",
+    "tsup": "^8.0.0",
+    "typescript": "^6.0.3"
+  }
+}
