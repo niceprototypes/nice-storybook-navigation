@@ -1,1 +1,1 @@
-[2026-09-15 20:10] minor: Initial extraction — token-styled sidebar tree (tagSidebarPaths engine + glyph restyle + manager-sidebar CSS) and the preview-side StoryNavigation bar, moved out of nice-storybook into a standalone addon.
+[2026-09-15 20:10] minor: Initial extraction — the preview-side StoryNavigation bar (back/next story navigation, sidebar toggle, dark-mode toggle, open-in-editor, settings menu) and its manager-side channel bridge, moved out of nice-storybook into a standalone addon. The manager sidebar-tree styling lives separately in nice-storybook-theme.

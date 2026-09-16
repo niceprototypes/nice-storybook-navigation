@@ -1,13 +1,15 @@
 # nice-storybook-navigation
 
-A Storybook addon for the Nice design system. Two coordinated pieces:
+A Storybook addon for the Nice design system: a fixed **preview-side navigation
+bar** with
 
-- **Sidebar tree** — a token-styled manager sidebar: folder + branch-connector
-  glyphs, depth/selection-aware tree lines, and a hidden search. Driven by a
-  `tagSidebarPaths` engine that stamps derived `data-*` attributes on the tree.
-- **Navigation bar** — a fixed preview-side bar: back/next story navigation,
-  sidebar (nav) toggle, dark-mode toggle, open-in-editor, and a settings menu.
-  The two halves talk over Storybook's addons channel.
+- back / next story navigation across consumer-defined sequences,
+- a sidebar (nav) toggle, a dark-mode toggle, and an open-in-editor action,
+- a settings menu mirroring Storybook's gear menu.
+
+The bar renders in the preview iframe; a small manager entry bridges its actions
+to the Storybook `api` over the addons channel. (The manager **sidebar tree**
+styling is a separate addon, `nice-storybook-theme`.)
 
 ## Install
 
@@ -48,14 +50,6 @@ export const parameters = {
   },
 }
 ```
-
-## Caveat
-
-The sidebar styling depends on Storybook's **private** sidebar DOM
-(`.sidebar-item`, `data-nodetype`, `[tabindex] > div:first-child > svg`, …),
-verified against **Storybook 10**. A Storybook internal change can require
-updating the selectors in `src/styles/managerSidebarCss.ts` and
-`src/manager/glyphs.ts`.
 
 ## License
 

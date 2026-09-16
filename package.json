@@ -1,7 +1,7 @@
 {
   "name": "nice-storybook-navigation",
   "version": "0.1.0",
-  "description": "Storybook addon: a token-styled sidebar tree and a preview-side navigation bar (back/next, sidebar toggle, open-in-editor, settings) for the Nice design system.",
+  "description": "Storybook addon: a preview-side navigation bar — back/next story navigation, sidebar toggle, dark-mode toggle, open-in-editor, and a settings menu — for the Nice design system.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -56,7 +56,6 @@
     "styled-components": ">=6.1.18 <7.0.0"
   },
   "dependencies": {
-    "nice-icons": "file:../icons",
     "nice-react-button": "file:../react-button",
     "nice-react-flex": "file:../react-flex",
     "nice-react-icon": "file:../react-icon",

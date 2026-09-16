@@ -1,6 +1,4 @@
 import { addons } from "storybook/manager-api"
-import { DARK_MODE_EVENT_NAME } from "storybook-dark-mode"
-import { applyTheme } from "nice-styles"
 import {
   ADDON_ID,
   TOGGLE_NAV_EVENT,
@@ -10,46 +8,13 @@ import {
   NAV_ACTION_EVENT,
 } from "./constants"
 import type { NavAction } from "./types"
-import { injectSidebarGlyphs } from "./manager/glyphs"
-import { startSidebarTagging } from "./manager/tagSidebarPaths"
-import { managerSidebarCss } from "./styles/managerSidebarCss"
 
 /**
  * Manager entry. Loaded by Storybook from `nice-storybook-navigation/manager`.
- * Runs on import: restyles the sidebar tree, wires theming so its tokens flip,
- * and bridges the preview-side navigation bar to the manager `api`. Only the
- * sidebar is configured here — the consumer keeps ownership of the manager theme
- * and branding via their own `addons.setConfig`.
+ * Bridges the preview-side navigation bar — which runs in the preview iframe and
+ * can't touch the manager-owned sidebar or read story metadata — to the manager
+ * `api` over the addons channel.
  */
-
-// Collapsible top-level sections (Storybook expands only the selected story's
-// ancestors), so the tree reads as folders rather than always-open roots.
-addons.setConfig({ sidebar: { showRoots: false } })
-
-// Inject the sidebar stylesheet + glyph masks, then start tagging the tree so
-// the CSS/glyphs have their data attributes to read.
-const sidebarStyle = document.createElement("style")
-sidebarStyle.textContent = managerSidebarCss
-document.head.appendChild(sidebarStyle)
-injectSidebarGlyphs()
-startSidebarTagging()
-
-// Mirror storybook-dark-mode into <html data-theme="night|day"> so the sidebar's
-// nice tokens flip on toggle (nice-styles keys theming on [data-theme]).
-const syncTheme = (isDark: boolean) => applyTheme(isDark ? "night" : "day")
-addons.register(`${ADDON_ID}/theme-sync`, () => {
-  addons.getChannel().on(DARK_MODE_EVENT_NAME, syncTheme)
-})
-
-// Unbind the sidebar search shortcut. The field is hidden in the stylesheet;
-// cmd/ctrl-K would otherwise still leave fullscreen and force-show the sidebar
-// before focusing a hidden input. An empty key list never matches.
-addons.register(`${ADDON_ID}/disable-search`, (api) => {
-  api.setShortcut("search", [])
-})
-
-// Bridge the preview-side navigation bar (it runs in the preview iframe and
-// can't touch the manager-owned sidebar) to the manager over the channel.
 addons.register(ADDON_ID, (api) => {
   const channel = addons.getChannel()
   const emitState = () => channel.emit(NAV_STATE_EVENT, api.getIsNavShown())

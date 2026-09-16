@@ -4,9 +4,9 @@ import { defineConfig } from "tsup"
  * Three entry points, matching the Storybook addon contract:
  * - `index`   — the public API (the `StoryNavigation` component, types, the
  *   channel event constants) consumers import directly.
- * - `manager` — the manager-side register: sidebar tree restyle + the
- *   `tagSidebarPaths` engine + the preview↔manager channel bridge. Loaded by
- *   Storybook from `nice-storybook-navigation/manager`.
+ * - `manager` — the manager-side register: the preview↔manager channel bridge
+ *   that drives the sidebar toggle, open-in-editor, and settings actions. Loaded
+ *   by Storybook from `nice-storybook-navigation/manager`.
  * - `preview` — the preview-side global decorator that renders the navigation
  *   bar. Loaded from `nice-storybook-navigation/preview`.
  *
