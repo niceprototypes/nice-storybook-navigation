@@ -44,7 +44,7 @@ export const SettingsItem = styled.button`
   line-height: 1.4;
 
   &:hover {
-    background-color: ${getToken("backgroundColor", "dark")};
+    background-color: ${getToken("backgroundColor", "raised")};
     color: ${getToken("color")};
   }
 
