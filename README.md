@@ -11,6 +11,22 @@ The bar renders in the preview iframe; a small manager entry bridges its actions
 to the Storybook `api` over the addons channel. (The manager **sidebar tree**
 styling is a separate addon, `nice-storybook-theme`.)
 
+## Screens
+
+At desktop width every control carries its label, and the current page sits
+between the back / next links.
+
+<img src="docs/desktop.png" alt="The navigation bar at desktop width: back and next links either side of the current page name, and labelled controls for collapse menu, open in editor, switch to night mode, and settings." width="100%">
+
+Below tablet the bar sheds what does not fit. The sidebar toggle and
+open-in-editor drop away — the sidebar lives behind Storybook's mobile menu
+there, and there is no editor to open — and so does the centre label. The back /
+next links keep their arrows without labels, the remaining controls become square
+and size their glyphs from the icon scale, and a menu control opens Storybook's
+own mobile menu.
+
+<img src="docs/mobile.png" alt="The navigation bar at phone width: unlabelled back and next arrows, and three icon-only controls for theme, settings, and the mobile menu." width="320">
+
 ## Install
 
 ```bash
