@@ -25,7 +25,11 @@ export default defineConfig({
     "react-dom",
     "react/jsx-runtime",
     "styled-components",
-    "storybook",
+    // Subpath-aware: the entries import storybook/manager-api and
+    // storybook/preview-api, which a bare "storybook" external does not match —
+    // bundling them drags in storybook/internal/* and breaks the host's
+    // global-externals mapping at build time.
+    /^storybook(\/|$)/,
     "storybook-dark-mode",
     /^@storybook\//,
     /^nice-/,

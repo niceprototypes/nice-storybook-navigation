@@ -9,12 +9,13 @@ import { navigate } from "@storybook/addon-links"
 import Flex from "nice-react-flex"
 import Ink from "nice-react-ink"
 import type { ThemeType } from "nice-styles"
-import { OuterFlex, SpacerDiv } from "./StoryNavigation.styles"
+import { MobileOnlyDiv, OuterFlex, SpacerDiv, TabletUpDiv } from "./StoryNavigation.styles"
 import {
   TOGGLE_NAV_EVENT,
   NAV_STATE_EVENT,
   REQUEST_NAV_STATE_EVENT,
   OPEN_IN_EDITOR_EVENT,
+  NAV_ACTION_EVENT,
 } from "../constants"
 import type { StoryNavigationItem, StoryNavigationSequence } from "../types"
 import StoryNavigationLink from "./StoryNavigationLink"
@@ -145,13 +146,15 @@ const StoryNavigation: React.FC<StoryNavigationProps> = ({
             />
           )}
           {currentName && (
-            <Ink
-              size="small"
-              weight="medium"
-              color="lightest"
-            >
-              {currentName}
-            </Ink>
+            <TabletUpDiv>
+              <Ink
+                size="small"
+                weight="medium"
+                color="lightest"
+              >
+                {currentName}
+              </Ink>
+            </TabletUpDiv>
           )}
           {next && (
             <StoryNavigationLink
@@ -171,16 +174,20 @@ const StoryNavigation: React.FC<StoryNavigationProps> = ({
             },
           }}
         >
-          <StoryNavigationLink
-            label={isNavShown ? "Collapse menu" : "Expand menu"}
-            onClick={() => addons.getChannel().emit(TOGGLE_NAV_EVENT)}
-            iconLeft={isNavShown ? "collapse" : "expand"}
-          />
-          <StoryNavigationLink
-            label="Open in editor"
-            onClick={() => addons.getChannel().emit(OPEN_IN_EDITOR_EVENT)}
-            iconLeft="code"
-          />
+          <TabletUpDiv>
+            <StoryNavigationLink
+              label={isNavShown ? "Collapse menu" : "Expand menu"}
+              onClick={() => addons.getChannel().emit(TOGGLE_NAV_EVENT)}
+              iconLeft={isNavShown ? "collapse" : "expand"}
+            />
+          </TabletUpDiv>
+          <TabletUpDiv>
+            <StoryNavigationLink
+              label="Open in editor"
+              onClick={() => addons.getChannel().emit(OPEN_IN_EDITOR_EVENT)}
+              iconLeft="code"
+            />
+          </TabletUpDiv>
           <StoryNavigationLink
             label={`Switch to ${otherTheme} mode`}
             onClick={() =>
@@ -190,6 +197,13 @@ const StoryNavigation: React.FC<StoryNavigationProps> = ({
             iconVendor
           />
           <StoryNavigationSettings />
+          <MobileOnlyDiv>
+            <StoryNavigationLink
+              label="Open navigation menu"
+              onClick={() => addons.getChannel().emit(NAV_ACTION_EVENT, "toggle-mobile-menu")}
+              iconLeft="menu"
+            />
+          </MobileOnlyDiv>
         </Flex>
       </OuterFlex>
       <SpacerDiv />

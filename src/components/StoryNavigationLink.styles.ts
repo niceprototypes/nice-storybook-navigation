@@ -23,6 +23,22 @@ export const LinkFlex = styled(Flex).attrs({
       color: ${getToken("color")} !important;
     }
   }
+
+  ${getBreakpoint("phone")} {
+    /* Square tap target: the label is hidden here, so the control is just its
+       glyph and the box should not stay text-width. */
+    [role="button"] {
+      width: ${getToken("size", "small")};
+    }
+
+    /* Size Icon's wrapper, not the svg: the wrapper carries the icon.size token
+       and its own \`svg { width: 100% }\` makes the glyph follow. Selected by what
+       it contains, since the class is generated. */
+    [role="button"] div:has(> svg) {
+      width: ${getToken("icon.size:large")};
+      height: ${getToken("icon.size:large")};
+    }
+  }
 `
 
 /**

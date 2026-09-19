@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import Flex from "nice-react-flex"
-import { getToken } from "nice-react-styles"
+import { getBreakpoint, getToken } from "nice-react-styles"
 
 export const OuterFlex = styled(Flex).attrs({
   gap: "smaller",
@@ -41,4 +41,30 @@ export const OuterFlex = styled(Flex).attrs({
 
 export const SpacerDiv = styled.div`
   height: calc(${getToken("gap", "large")} * 2 + ${getToken("size", "small")});
+`
+
+/**
+ * Wraps a control that only exists below tablet. Storybook's own mobile bar owns
+ * the nav menu there, and its button is the only way into it — above tablet the
+ * sidebar is always present, so the control has nothing to open.
+ */
+export const MobileOnlyDiv = styled.div`
+  display: inline-flex;
+
+  ${getBreakpoint("tablet+")} {
+    display: none;
+  }
+`
+
+/**
+ * Wraps a control that is dropped on a phone. The bar has no room for five, and
+ * these are the ones a phone can do without: the sidebar is behind the mobile
+ * menu there, and there is no editor to open.
+ */
+export const TabletUpDiv = styled.div`
+  display: none;
+
+  ${getBreakpoint("tablet+")} {
+    display: inline-flex;
+  }
 `

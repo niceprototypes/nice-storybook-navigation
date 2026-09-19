@@ -46,6 +46,14 @@ addons.register(ADDON_ID, (api) => {
     "prev-story": () => api.jumpToStory(-1),
     "next-story": () => api.jumpToStory(1),
     "collapse-all": () => api.collapseAll(),
+    // Storybook exposes no api for the mobile menu — its state lives in the
+    // mobile layout context — so click the bar's own button. Keyed on
+    // aria-controls rather than the label, which is prose and localizable, and a
+    // no-op above the mobile layout where the button is not rendered.
+    "toggle-mobile-menu": () =>
+      document
+        .querySelector<HTMLElement>('[aria-controls="storybook-mobile-menu"]')
+        ?.click(),
   }
   channel.on(NAV_ACTION_EVENT, (action: NavAction) => ACTIONS[action]?.())
 })

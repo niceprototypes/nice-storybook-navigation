@@ -31,3 +31,4 @@ export type NavAction =
   | "prev-story"
   | "next-story"
   | "collapse-all"
+  | "toggle-mobile-menu"
