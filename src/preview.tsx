@@ -1,11 +1,17 @@
 import * as React from "react"
 import StoryNavigation from "./components/StoryNavigation"
 import { PARAM_KEY } from "./constants"
-import type { StoryNavigationSequence } from "./types"
+import type {
+  StoryNavigationIndexSequence,
+  StoryNavigationSequence,
+} from "./types"
 
 /** Shape of the `storyNavigation` parameter a consumer sets. */
 interface StoryNavigationParameters {
+  /** Hand-written sequences. */
   sequences?: StoryNavigationSequence[]
+  /** Sequences derived from the story index (see `StoryNavigationIndexSequence`). */
+  indexSequences?: StoryNavigationIndexSequence[]
 }
 
 /**
@@ -17,7 +23,10 @@ interface StoryNavigationParameters {
  * @example
  * // .storybook/preview.tsx
  * export const parameters = {
- *   storyNavigation: { sequences: [[{ id: "basics-welcome--docs", label: "Welcome" }]] },
+ *   storyNavigation: {
+ *     sequences: [[{ id: "basics-welcome--docs", label: "Welcome" }]],
+ *     indexSequences: [{ titlePrefix: "Components/" }],
+ *   },
  * }
  */
 export const decorators = [
@@ -31,7 +40,10 @@ export const decorators = [
     return (
       <>
         <Story />
-        <StoryNavigation sequences={param?.sequences} />
+        <StoryNavigation
+          sequences={param?.sequences}
+          indexSequences={param?.indexSequences}
+        />
       </>
     )
   },

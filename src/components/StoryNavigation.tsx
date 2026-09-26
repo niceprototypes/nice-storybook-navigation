@@ -16,8 +16,15 @@ import {
   REQUEST_NAV_STATE_EVENT,
   OPEN_IN_EDITOR_EVENT,
   NAV_ACTION_EVENT,
+  REQUEST_INDEX_SEQUENCES_EVENT,
+  INDEX_SEQUENCES_EVENT,
 } from "../constants"
-import type { StoryNavigationItem, StoryNavigationSequence } from "../types"
+import type {
+  StoryNavigationIndexSequence,
+  StoryNavigationItem,
+  StoryNavigationSequence,
+} from "../types"
+import { getNeighbourLabel } from "../utilities/getNeighbourLabel"
 import StoryNavigationLink from "./StoryNavigationLink"
 import StoryNavigationSettings from "./StoryNavigationSettings"
 
@@ -29,6 +36,15 @@ export interface StoryNavigationProps {
    * carries no project-specific content.
    */
   sequences?: StoryNavigationSequence[]
+  /**
+   * Sequences derived from Storybook's own index instead of listed by hand —
+   * e.g. `[{ titlePrefix: "Components/" }]` chains every page under Components
+   * in sidebar order, grouped by folder, so new pages join automatically. The
+   * bar requests them from the manager, whose index (`api.getIndex()`) is the
+   * one the sidebar is built from. Searched after `sequences`, so a hand-written sequence wins for a
+   * page listed in both.
+   */
+  indexSequences?: StoryNavigationIndexSequence[]
   /** Override the current story id; defaults to the `id` URL query param. */
   currentId?: string
   /**
@@ -83,6 +99,7 @@ function neighbours(
  */
 const StoryNavigation: React.FC<StoryNavigationProps> = ({
   sequences = [],
+  indexSequences,
   currentId,
   name,
   theme,
@@ -113,7 +130,40 @@ const StoryNavigation: React.FC<StoryNavigationProps> = ({
   }, [])
 
   const id = resolveCurrentId(currentId)
-  const { back, current, next } = id ? neighbours(id, sequences) : {}
+
+  // Index-derived sequences arrive from the manager. Keyed by the request so a
+  // late reply to a previous request is ignored; re-requested per page so
+  // pages added while the server runs join on the next navigation.
+  const indexKey = indexSequences?.length ? JSON.stringify(indexSequences) : ""
+  const [indexed, setIndexed] = useState<{
+    key: string
+    sequences: StoryNavigationSequence[]
+  }>({ key: "", sequences: [] })
+
+  useEffect(() => {
+    if (!indexKey) return
+    const channel = addons.getChannel()
+    const onIndexSequences = (reply: {
+      key: string
+      sequences: StoryNavigationSequence[]
+    }) => {
+      if (reply.key === indexKey) setIndexed(reply)
+    }
+    channel.on(INDEX_SEQUENCES_EVENT, onIndexSequences)
+    channel.emit(REQUEST_INDEX_SEQUENCES_EVENT, {
+      key: indexKey,
+      requests: JSON.parse(indexKey) as StoryNavigationIndexSequence[],
+    })
+    return () => {
+      channel.off(INDEX_SEQUENCES_EVENT, onIndexSequences)
+    }
+  }, [indexKey, id])
+
+  const allSequences =
+    indexKey && indexed.key === indexKey
+      ? [...sequences, ...indexed.sequences]
+      : sequences
+  const { back, current, next } = id ? neighbours(id, allSequences) : {}
   const currentName = name ?? current?.label
   const activeTheme = theme ?? detectedTheme
   const otherTheme: ThemeType = activeTheme === "night" ? "day" : "night"
@@ -140,7 +190,7 @@ const StoryNavigation: React.FC<StoryNavigationProps> = ({
         >
           {back && (
             <StoryNavigationLink
-              label={back.label}
+              label={getNeighbourLabel(back, current)}
               onClick={() => navigate({ storyId: back.id })}
               iconLeft="arrow-left"
             />
@@ -158,7 +208,7 @@ const StoryNavigation: React.FC<StoryNavigationProps> = ({
           )}
           {next && (
             <StoryNavigationLink
-              label={next.label}
+              label={getNeighbourLabel(next, current)}
               onClick={() => navigate({ storyId: next.id })}
               iconRight="arrow-right"
             />

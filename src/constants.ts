@@ -8,6 +8,8 @@
  *  - manager emits {@link NAV_STATE_EVENT}         → bar updates the toggle icon
  *  - preview emits {@link OPEN_IN_EDITOR_EVENT}    → manager opens the current story's source
  *  - preview emits {@link NAV_ACTION_EVENT}        → manager maps the action to an `api` call
+ *  - preview emits {@link REQUEST_INDEX_SEQUENCES_EVENT} → manager replies with
+ *    {@link INDEX_SEQUENCES_EVENT}: sequences built from the sidebar's own index
  */
 
 /** Namespace for the addon's registered manager entries and channel events. */
@@ -18,6 +20,8 @@ export const NAV_STATE_EVENT = `${ADDON_ID}/nav-state`
 export const REQUEST_NAV_STATE_EVENT = `${ADDON_ID}/request-nav-state`
 export const OPEN_IN_EDITOR_EVENT = `${ADDON_ID}/open-in-editor`
 export const NAV_ACTION_EVENT = `${ADDON_ID}/action`
+export const REQUEST_INDEX_SEQUENCES_EVENT = `${ADDON_ID}/request-index-sequences`
+export const INDEX_SEQUENCES_EVENT = `${ADDON_ID}/index-sequences`
 
 /** Storybook `parameters` key a consumer sets to supply navigation sequences. */
 export const PARAM_KEY = "storyNavigation"

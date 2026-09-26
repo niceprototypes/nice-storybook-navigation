@@ -6,8 +6,26 @@ import {
   REQUEST_NAV_STATE_EVENT,
   OPEN_IN_EDITOR_EVENT,
   NAV_ACTION_EVENT,
+  REQUEST_INDEX_SEQUENCES_EVENT,
+  INDEX_SEQUENCES_EVENT,
 } from "./constants"
-import type { NavAction } from "./types"
+import { buildIndexSequence } from "./services/buildIndexSequence"
+import type {
+  NavAction,
+  StoryNavigationIndexEntry,
+  StoryNavigationIndexSequence,
+} from "./types"
+
+/** Payload of {@link REQUEST_INDEX_SEQUENCES_EVENT}. */
+interface IndexSequencesRequest {
+  /** Echoed back so the bar can match the reply to its current request. */
+  key: string
+  requests: StoryNavigationIndexSequence[]
+}
+
+/** Retry cadence while the manager has not loaded its index yet. */
+const INDEX_RETRY_MS = 100
+const INDEX_RETRY_LIMIT = 50
 
 /**
  * Manager entry. Loaded by Storybook from `nice-storybook-navigation/manager`.
@@ -34,6 +52,31 @@ addons.register(ADDON_ID, (api) => {
     const file = api.getCurrentStoryData()?.importPath
     if (file) api.openInEditor({ file })
   })
+
+  // Index-derived sequences. Built here rather than in the preview because the
+  // manager owns the index the sidebar is built from, exposed through the public
+  // `api.getIndex()`: its entries are already in storySort order (Storybook
+  // sorts the index when it builds it), so the chain matches the sidebar by
+  // construction. Early requests can land before the manager has loaded its
+  // index, so retry briefly until it is there.
+  const replyIndexSequences = (request: IndexSequencesRequest, attempt = 0) => {
+    const index = api.getIndex()
+    if (!index) {
+      if (attempt < INDEX_RETRY_LIMIT)
+        setTimeout(() => replyIndexSequences(request, attempt + 1), INDEX_RETRY_MS)
+      return
+    }
+    const entries: StoryNavigationIndexEntry[] = Object.values(index.entries)
+    channel.emit(INDEX_SEQUENCES_EVENT, {
+      key: request.key,
+      sequences: request.requests.map(({ titlePrefix }) =>
+        buildIndexSequence(entries, titlePrefix)
+      ),
+    })
+  }
+  channel.on(REQUEST_INDEX_SEQUENCES_EVENT, (request: IndexSequencesRequest) =>
+    replyIndexSequences(request)
+  )
 
   // Settings menu — map each preview-side action to the manager api.
   const ACTIONS: Record<NavAction, () => void> = {
